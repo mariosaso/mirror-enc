@@ -1,67 +1,224 @@
-### mirror-enc v1.0.0
+# mirror-enc
 
-<p align="center">
-  <a href="https://github.com/mariosasodotcom/mirror-enc">
-    <img src="https://github.com/mariosasodotcom/mirror-enc/blob/master/resources/logo.png" alt="Logo" width=787 height=254>
-  </a>
+An encrypted TCP chat application with GUI, built in Python.
 
+## Overview
 
-  <p align="center">
-    A GPG frontend that provide AES and RSA encryption algorithms
-    <br>
-    <a href="https://github.com/mariosasodotcom/mirror-enc/issues/new?template=bug.md">Report bug</a>
-    ·
-    <a href="https://github.com/mariosasodotcom/mirror-enc/issues/new?template=feature.md&labels=feature">Request feature</a>
-  </p>
-</p>
+mirror-enc is a lightweight client-server chat system that supports:
 
+- End-to-end encrypted communication
+- Multi-client chat rooms
+- Password-protected server access
+- Unique nickname system
+- Simple graphical interface (Tkinter)
 
-## Table of contents
+The project is designed to be modular, extensible, and easy to understand.
 
-- [What's included](#whats-included)
-- [How it works](#how-it-works)
-- [About me](#about-me)
-- [Copyright and license](#copyright-and-license)
+---
 
---------------------------------------------------------------------------------
+## Features
 
-## What's included
+- RSA-based key exchange
+- Symmetric encryption using Fernet (AES + HMAC)
+- Threaded server with multiple clients
+- Real-time GUI updates via queue system
+- Clean separation of:
+  - networking (TCP)
+  - encryption
+  - chat logic
+  - UI
+
+---
+
+## Architecture
 
 ```
-│   mirror-enc.py          start mirror-enc
-│   resources              logo img
-│   README.md              project readme
-│   LICENSE                license of the tool
-│   .gitignore             gitignore for the python program   
-└───
+mirror-enc/
+│
+├── main.py              # Entry point
+├── chat_service.py      # Chat logic (server/client)
+├── tcp_service.py       # Low-level TCP + handshake
+├── crypto.py            # Encryption utilities
+├── gui.py               # Tkinter GUI
+├── prompts.py           # CLI configuration
+└── __init__.py          # Banner / metadata
 ```
 
---------------------------------------------------------------------------------
+### Flow
 
-## How it works
+1. Server starts and listens for connections
+2. Client connects
+3. RSA handshake exchanges a symmetric key
+4. Authentication (password + nickname)
+5. Encrypted messages are exchanged using Fernet
 
-Usage:
+---
 
-```      
-    $ python3 mirror-enc.py 
+## Installation
+
+### Requirements
+
+- Python 3.8+
+- pip
+
+### Install dependencies
+
+```bash
+pip install cryptography InquirerPy
 ```
 
---------------------------------------------------------------------------------
+---
 
-## About me
+## Usage
 
-**Bio**
+### Run the application
 
-My name is Mario and I'm 25 years old. I am a computer engineering student in Pisa and a music producer.
+```bash
+python mirror-enc.py
+```
 
-**Contact Me**
+### Select mode
 
-- WebSite: https://www.mariosaso.com
-- Github:  https://github.com/mariosasodotcom
-- E-mail:  mariosaso@protonmail.com
+You will be prompted to choose:
 
---------------------------------------------------------------------------------
+- Server
+- Client
 
-## Copyright and license
+---
 
-Copyright (C) 2019-2021 Mario Saso. Code released under the [GPLv3](https://github.com/M4R1OS4S0/mirror-enc/blob/master/LICENSE).
+## Server Mode
+
+You will be asked:
+
+- Host (default: localhost)
+- Port (default: 4444)
+- Password
+
+Example:
+
+```
+Host: localhost
+Port: 4444
+Password: ********
+```
+
+---
+
+## Client Mode
+
+You will be asked:
+
+- Server host
+- Server port
+- Password
+- Nickname
+
+Example:
+
+```
+Host: localhost
+Port: 4444
+Password: ********
+Nickname: Mario
+```
+
+---
+
+## Encryption Details
+
+### Key Exchange
+
+- RSA (2048 bits) is used for secure key exchange
+- The client generates a symmetric key
+- The key is encrypted with the server public key
+
+### Message Encryption
+
+- All messages are encrypted using Fernet
+- Fernet provides:
+  - AES encryption
+  - HMAC authentication
+
+---
+
+## GUI
+
+The application uses Tkinter:
+
+- Chat display area
+- Message input field
+- Send button
+- Auto-scroll
+- Real-time updates via queue
+
+---
+
+## Important Notes
+
+- Each nickname must be unique
+- Server password is required for authentication
+- Messages are encrypted during transmission only (no persistence)
+- GUI closes automatically when the connection is lost (client mode)
+
+---
+
+## Known Limitations
+
+- No message history
+- No reconnection logic
+- Basic error handling
+- No persistence layer
+- Server without password is not fully supported
+
+---
+
+## Future Improvements
+
+- Reconnection support
+- Message history
+- File transfer
+- Better error handling
+- Config file support
+- UI improvements
+- Plugin architecture
+
+---
+
+## Example
+
+Run server:
+
+```bash
+python mirror-enc.py
+```
+
+Select:
+```
+Server
+```
+
+Run client (in another terminal):
+
+```bash
+python mirror-enc.py
+```
+
+Select:
+```
+Client
+```
+
+Start chatting securely.
+
+---
+
+## Author
+
+Mario Saso   
+https://github.com/mariosasodotcom
+
+---
+
+## License
+
+This project uses the GPLv3 license
