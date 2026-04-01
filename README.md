@@ -215,7 +215,7 @@ Start chatting securely.
 ## Author
 
 Mario Saso   
-https://github.com/mariosasodotcom
+https://github.com/mariosaso
 
 ---
 
